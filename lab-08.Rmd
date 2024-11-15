@@ -58,7 +58,7 @@ weather_noNA %>%
 group_by(Location) %>%
   count(RainToday = 'Yes') %>%
   arrange(desc(n))
-`````````
+```
 
 # Exercise 2: Logistic regression
 
@@ -74,6 +74,11 @@ weather_Portland <- weather_noNA %>%
 1. Try to predict `RainTomorrow` by fitting a linear regression using the variable `RainToday` and print the output using `tidy()`.
 
 ```{r}
+Rain_Guess <- logistic_reg() %>%
+  set_engine("glm") %>%
+  fit(RainTomorrow ~ RainToday, data = weather_Portland, family = "binomial")
+
+tidy(Rain_Guess)
 
 ```
 
@@ -82,12 +87,16 @@ weather_Portland <- weather_noNA %>%
 - Plot them using an appropriate visualization. What is peculiar about them?
 
 ```{r}
+Weather_guess<- predict(Rain_Guess,weather_Portland, type = 'prob') %>%
+  bind_cols(weather_Portland)
 
+ggplot(Weather_guess, aes(x = .pred_Yes))+
+  geom_histogram() 
 ```
 
 > Hint: how many unique values do the predicted probabilities take? What do these value correspond to?
 
-*Add your answer here*
+There are only 2 unique values, these values correspond to the chances of rain happening in the following day.
 
 - Are there any missing values? Why?
 
@@ -95,7 +104,7 @@ weather_Portland <- weather_noNA %>%
 
 ```
 
-*Add your answer here*
+There are no missing values in my case because i removed all NA values at the start of my code. This can also be seen by the fact there was no change in number of values throught the code.
 
 # Exercise 3: Split the data and build workflows
 
