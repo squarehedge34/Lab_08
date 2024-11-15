@@ -117,6 +117,9 @@ set.seed(111723)
 1. Split the data into a training set (80% of your Portland data) and a testing set.
 
 ```{r}
+sampleing <- sample(c(TRUE, FALSE), nrow(weather_Portland), replace = TRUE, prob = c(0.7, 0.3))
+training_set <- weather_Portland[sampleing,]
+testing_set <- weather_Portland[!sampleing,]
 
 ```
 
